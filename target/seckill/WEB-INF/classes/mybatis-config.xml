@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!-- 右键 	new file 	mybatis-config.xml,然后再仙剑mapper文件夹来放mybatis的sql映射文件
+  mybatis官方api: mybatis.github.io/mybatis-3/zh/getting-started.html
+
+-->
+	<!-- 配置全局属性： -->
+	<settings>	 
+	 <!-- use使用 jdbc的getGeneratedKeys实现数据库主键自增：eg: insert时不需要插入主键就可自增主键 -->
+		<setting name="useGeneratedKeys" value="true" />
+
+		<!-- 使用列别名替换列名 设置 :
+		selected dbName as poName from users
+		mybatis会自动识别你把users表的‘dbName’列转化为了实体的poName属性！同时copy到对应的该实体属性中去 
+		-->
+		<setting name="useColumnLabel" value="true" />
+
+		<!-- 开启驼峰命名自动转换设置: Table{create_time} -> Entity{createTime} -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+	
+	<!-- mybatis配置完成了以后，就需要关心的时如何用mybatis去实现dao(xxxDao.xml)
+	mybatis实现dao有两种方式：1：mybatis自动生成dao接口的实现
+						 2：通过mybatis的API: 通过mybatis官方API配置xxxDao.xml		
+	-->
+	
+	<!-- mybatis整合Spring： 	1.更少的代码：只写interface，不写Implements类(而是用mybatis来实现了Dao接口！！！)
+							2.更少的配置：只写别名(自动扫描包名); Spring 实现注入IOP+AOC
+							3.最大的保持mybatis原有的灵活性：通过EL表达式(OGNL表达式)灵活传参+灵活拼sql+结果集自动赋值
+		
+	
+	-->
+</configuration>

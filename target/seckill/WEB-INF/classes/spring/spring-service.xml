@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	
+	<!-- 扫描service包  下所有使用注解的类型  自动帮该类型做对象实例的初始化-->
+	<context:component-scan base-package="org.seckill.service" />
+
+
+	<!--
+	什么是事务： http://www.imooc.com/video/117233
+	@Transactional //该Spring注解使得 进入和退出该方法的时候，自动加入事务control的逻辑
+	什么时候回滚事务： 1.抛出运行期异常(RuntimeExcepton); 2.小心不当的try...catch...
+	使用注解控制事务方法的优点：
+	 1.开发团队达成一致约定，明确标注事务方法的编程风格(如果抛出的是运行期异常，则事务就会rollback)
+	 2.保证事务方法的执行时间尽可能短，不要穿插其他网络操作(操作的是数据库之外的): 缓存、RPC/HTTP请求、剥离到事务方法外部
+	 3.不是所有的方法都需要事务，如只有一条修改操作，只读操作不需要事务控制
+	  -->
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 注入数据库连接池 （spring-dao.xml中的那个“dataSource”）-->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 配置基于 注解的 声明式事务(@Transactional，这种比较灵活)，而非永久的AOP式配置"" -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	
+</beans>

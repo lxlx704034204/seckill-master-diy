@@ -1,0 +1,29 @@
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                      http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	version="3.1" metadata-complete="true">
+	
+	<!--配置SprinMVC:  -->
+	
+	<!-- 修改servlet版本为3.1 -->
+	<!-- 配置SpringMVC的核心：DispatcherServlet -->
+	<servlet>
+		<servlet-name>seckill-dispatcher</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!-- 配置springMVC需要加载的配置文件
+			spring  -> spring-dao.xml,spring-service.xml, spring-web.xml(次xml中配置了springMVC)
+			Mybatis -> spring -> springmvc
+			
+			这些xml配置 全部通过“DispatcherServlet” 加载启动！！！
+		 -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:spring/spring-*.xml</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>seckill-dispatcher</servlet-name>
+		<!-- 默认匹配所有的请求: 所有的请求导入 引入到 DispatcherServlet中-->
+		<url-pattern>/</url-pattern> 
+	</servlet-mapping>
+</web-app>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.seckill.dao.SeckillDao">
+	<!-- 目的：为dao接口方法提供sql语句配置 : ‘namespace’指明了目标dao-->
+	
+	<update id="reduceNumber"> <!--update这里会自动识别 resultType="int" parameterType="int",so不用写  -->
+		<!-- 具体的sql 	‘#{seckillId}’中的seckillId是SeckillDao.java中reduceNumber()方法中的"seckillId"参数
+					    '#{killTime}'同理； SSM的sql中不允许有‘<=’的符号 需要转义为：‘<![CDATA[ <= ]]>’
+		-->
+		UPDATE seckill
+		SET   number = number - 1
+		WHERE seckill_id = #{seckillId}
+		AND start_time <![CDATA[ <= ]]> #{killTime}
+		AND end_time >= #{killTime}
+		AND number > 0
+	</update>
+	
+	<select id="queryById" resultType="Seckill" parameterType="long">
+		SELECT seckill_id, NAME, number, start_time, end_time, create_time
+		FROM seckill
+		WHERE seckill_id = #{seckillId}
+	</select>
+	
+	<select id="queryAll" resultType="Seckill"><!--这里会自动识别 parameterType="int",so不用写  -->
+		SELECT seckill_id, NAME, number, start_time, end_time, create_time
+		FROM seckill
+		ORDER BY create_time DESC
+		LIMIT #{offset}, #{limit}
+		<!--接口中的queryAll方法中  会用‘@Param’告诉该sql中的   叫"offset"的这个形参(占位符)的实参为offset(传入的实际值)，叫"limit"的这个形参(占位符)"limit"的实参为limit(传入的实际值) -->
+	</select>
+	
+	<!--MyBatis调用存储过程 -->
+	<select id="killByProcedure" statementType="CALLABLE">
+		call execute_seckill (
+			#{seckillId, jdbcType = BIGINT, 	mode = IN },
+			#{phone, 	 jdbcType = BIGINT, 	mode = IN },
+			#{killTime,  jdbcType = TIMESTAMP, 	mode = IN },
+			#{result, 	 jdbcType = INTEGER, 	mode = OUT }
+		)
+	</select>
+</mapper>

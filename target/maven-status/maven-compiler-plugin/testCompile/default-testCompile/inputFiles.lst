@@ -1,0 +1,5 @@
+D:\CRM\seckill-master\src\test\java\org\seckill\BaseTest.java
+D:\CRM\seckill-master\src\test\java\org\seckill\service\impl\SeckillServiceImplTest.java
+D:\CRM\seckill-master\src\test\java\org\seckill\dao\SeckillDaoTest.java
+D:\CRM\seckill-master\src\test\java\org\seckill\dao\SuccessKilledDaoTest.java
+D:\CRM\seckill-master\src\test\java\org\seckill\dao\cache\RedisDaoTest.java

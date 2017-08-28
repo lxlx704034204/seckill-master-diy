@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.seckill.dao.SuccessKilledDao">
+
+	<insert id="insertSuccessKilled"><!--这里会自动识别 resultType="int" parameterType="int",so不用写  -->
+		<!--   ignore：只是在主键冲突的时候不报错崩溃，而是返回 0  			设置state默认=0		-->
+		INSERT ignore INTO success_killed (seckill_id, user_phone, state)
+		VALUES (#{seckillId}, #{userPhone}, 0)
+	</insert>
+	
+	<!--秒杀执行 传参：seckillId、 userPhone  -->
+	<select id="queryByIdWithSeckill" resultType="SuccessKilled"><!--这里会自动识别 parameterType="int",so不用写  -->
+		<!-- ★★★ 如何告诉MyBatis把结果映射到SuccessKilled的同时 映射seckill属性: 即 下半部分
+			的6个属性构成了 ‘seckill’实体的  seckill属性。 s.seckill_id as	"seckill.seckill_id" ：
+			s.seckill_id这一列出来的value作为seckill实体的‘seckill_id’属性！  里面的'as'可忽略！！！
+		-->
+		<!--mybatis相对于其他持久化框架而言最核心的优势是： 可以最大化的自由控制SQL语句 -->
+		SELECT
+			sk.seckill_id,
+			sk.user_phone,
+			sk.create_time,
+			sk.state,
+			
+			s.seckill_id as	"seckill.seckill_id",
+			s.`name` 		"seckill.name",
+			s.number 		"seckill.number",
+			s.start_time 	"seckill.start_time",
+			s.end_time 		"seckill.end_time",
+			s.create_time 	"seckill.create_time"
+		FROM 		success_killed sk
+		INNER JOIN 	seckill s ON sk.seckill_id = s.seckill_id
+		WHERE 		sk.seckill_id = #{seckillId} AND sk.user_phone = #{userPhone}
+		<!-- 		'success_killed'的联合主键
+		
+		用到了mybatis-config.xml中的"useColumnLabel"列别名替换列名配置
+			所以eg: sk.seckill_id直接就可以自动转换为实体的seckillId属性！！！ -->
+	</select>
+</mapper>
